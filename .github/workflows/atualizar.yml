@@ -1,0 +1,51 @@
+name: Atualizar monitor
+
+on:
+  schedule:
+    # Dias 8 a 15, quando o IBGE divulga o IPCA, e toda segunda-feira (Focus)
+    - cron: "0 15 8-15 * *"
+    - cron: "0 15 * * 1"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["src/**", "tests/**", "requirements.txt", ".github/workflows/**"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: atualizar-monitor
+  cancel-in-progress: false
+
+jobs:
+  atualizar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+
+      - name: Testes
+        run: python -m pytest -q tests
+
+      - name: Coletar dados e gerar o monitor
+        run: python src/main.py
+
+      - name: Publicar resultados
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data output nota
+          if git diff --staged --quiet; then
+            echo "Sem novidades."
+          else
+            git commit -m "Atualiza monitor com dados de $(date +%Y-%m-%d)"
+            git pull --rebase
+            git push
+          fi
