@@ -37,11 +37,11 @@ Essa é a principal razão da distância entre as projeções para setembro: o S
 
 | Mês | SARIMA (%) | Intervalo de 80% | Focus, mediana (%) | Acumulado em 12 meses, SARIMA (%) |
 |---|---:|---:|---:|---:|
-| set/26 | 0,09 | -0,25 a 0,43 | 0,56 | 3,82 |
-| out/26 | 0,28 | -0,10 a 0,66 | 0,33 | 4,01 |
+| set/26 | 0,09 | -0,25 a 0,43 | 0,60 | 3,82 |
+| out/26 | 0,28 | -0,10 a 0,66 | 0,32 | 4,01 |
 | nov/26 | 0,32 | -0,07 a 0,72 | 0,35 | 4,16 |
 | dez/26 | 0,48 | 0,08 a 0,88 | 0,56 | 4,32 |
-| jan/27 | 0,41 | 0,00 a 0,81 | 0,46 | 4,39 |
+| jan/27 | 0,41 | 0,00 a 0,81 | 0,45 | 4,39 |
 | fev/27 | 0,60 | 0,20 a 1,01 | 0,66 | 4,29 |
 
 ![Projeção](../output/figuras/projecao.png)
