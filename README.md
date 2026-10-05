@@ -26,7 +26,7 @@ Acompanhamento mensal do IPCA com atualização automática: coleta os dados do 
 
 Os modelos são univariados e servem de referência quantitativa. O Focus tende a superá-los no curto prazo, porque incorpora informação que eles não têm: prévias como o IPCA-15, preços coletados em alta frequência, anúncios de reajuste de preços administrados.
 
-**Resultado da avaliação (36 meses até ago/26):** o Focus erra, em média, cerca de 0,15 p.p. por mês (RMSE), menos que o modelo sazonal simples (0,25 p.p.) e o SARIMA (0,28 p.p.). O SARIMA não supera a referência sazonal: a dinâmica mensal do IPCA nesse período foi dominada por choques que não se repetem, como bandeiras tarifárias de energia e preços de combustíveis. O próximo passo natural é um modelo com informação de fora da série, como o IPCA-15 e os preços administrados. A tabela atualizada a cada mês está na [nota](nota/ultima_nota.md#desempenho-fora-da-amostra).
+**Resultado da avaliação (36 meses até ago/26):** o Focus erra, em média, cerca de 0,15 p.p. por mês (RMSE), menos que o modelo sazonal simples (0,25 p.p.) e o SARIMA (0,28 p.p.). O SARIMA não supera a referência sazonal, o que sugere que o padrão autorregressivo da série acrescenta pouco à sazonalidade nesse período. O próximo passo natural é um modelo com informação de fora da série, como o IPCA-15 e os preços administrados. A tabela atualizada a cada mês está na [nota](nota/ultima_nota.md#desempenho-fora-da-amostra).
 
 ## Atualização automática
 
