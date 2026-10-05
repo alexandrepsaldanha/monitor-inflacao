@@ -74,8 +74,9 @@ def falso_get(url, params=None, tentativas=4):
                     base = IPCA[MESES.get_loc(ref)] + np.random.default_rng(d.day).normal(0, .1)
                 else:
                     base = 0.35
-                linhas.append({"Data": d.strftime("%Y-%m-%d"), "DataReferencia": ref.strftime("%m/%Y"),
-                               "Mediana": round(base, 2), "numeroRespondentes": 50})
+                for bc in (0, 1):
+                    linhas.append({"Data": d.strftime("%Y-%m-%d"), "DataReferencia": ref.strftime("%m/%Y"),
+                                   "Mediana": round(base, 2) + bc, "numeroRespondentes": 50, "baseCalculo": bc})
         return {"@odata.context": "x", "value": linhas}
     raise AssertionError(url)
 
@@ -91,6 +92,24 @@ def test_parser_sidra_ignora_valores_nao_numericos():
     df = coleta.sidra_para_tabela(falso_get("/t/1737/"))
     assert {"Mês_cod", "Variável_cod", "valor"} <= set(df.columns)
     assert df["valor"].isna().sum() == 1
+
+
+def test_focus_url_sem_mais_e_refaz_sem_basecalculo(monkeypatch):
+    urls = []
+
+    def get(url, params=None, tentativas=4):
+        urls.append(url)
+        assert "+" not in url and params is None
+        if "baseCalculo" in url.split("%24select")[0] and len(urls) == 1:
+            r = coleta.requests.Response(); r.status_code = 400
+            raise coleta.requests.HTTPError("400", response=r)
+        return falso_get(url)
+
+    monkeypatch.setattr(coleta, "_get", get)
+    f = coleta.focus_mensal()
+    assert len(urls) == 2 and "%20" in urls[0]
+    assert not f.duplicated(["data_pesquisa", "referencia"]).any()
+    assert f["mediana"].max() < 1.5                       # só baseCalculo = 0
 
 
 def test_grupos_filtra_so_os_nove_grupos(pasta):

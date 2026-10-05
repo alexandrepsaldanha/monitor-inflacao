@@ -12,6 +12,7 @@ from __future__ import annotations
 import re
 import time
 from datetime import date
+from urllib.parse import quote
 
 import pandas as pd
 import requests
@@ -27,8 +28,17 @@ def _get(url: str, params: dict | None = None, tentativas: int = 4):
     for i in range(tentativas):
         try:
             r = requests.get(url, params=params, timeout=TIMEOUT)
+            if 400 <= r.status_code < 500:
+                # erro na consulta: repetir não adianta; mostra a resposta da API no log
+                raise requests.HTTPError(f"{r.status_code} em {r.url}\n{r.text[:500]}", response=r)
             r.raise_for_status()
             return r.json()
+        except requests.HTTPError as e:
+            if e.response is not None and 400 <= e.response.status_code < 500:
+                raise
+            if i == tentativas - 1:
+                raise
+            time.sleep(5 * (i + 1))
         except (requests.RequestException, ValueError):
             if i == tentativas - 1:
                 raise
@@ -91,16 +101,40 @@ def ipca_grupos(ano_inicial: int = 2020) -> pd.DataFrame:
     return tab.sort_values(["data", "grupo"]).reset_index(drop=True)
 
 
+def _odata(filtro: str, campos: str, top: int) -> dict:
+    """Consulta a API Olinda. A URL é montada à mão: o OData do BCB não aceita
+    espaços codificados como "+" (padrão do requests), só como "%20"."""
+    q = {"$filter": filtro, "$select": campos, "$format": "json", "$top": str(top)}
+    seguros = "',"
+    qs = "&".join(f"{quote(k)}={quote(v, safe=seguros)}" for k, v in q.items())
+    return _get(f"{OLINDA}?{qs}")
+
+
 def focus_mensal(desde: str = "2019-01-01") -> pd.DataFrame:
-    """Mediana das expectativas mensais do Focus para o IPCA."""
-    params = {
-        "$filter": f"Indicador eq 'IPCA' and baseCalculo eq 0 and Data ge '{desde}'",
-        "$select": "Data,DataReferencia,Mediana,numeroRespondentes",
-        "$format": "json",
-        "$top": "200000",
-    }
-    js = _get(OLINDA, params=params)
+    """Mediana das expectativas mensais do Focus para o IPCA.
+
+    baseCalculo = 0 seleciona as projeções informadas nos últimos 30 dias.
+    Se a API recusar o filtro, a consulta é refeita sem ele e o filtro é
+    aplicado aqui.
+    """
+    campos = "Data,DataReferencia,Mediana,numeroRespondentes,baseCalculo"
+    tentativas = [
+        f"Indicador eq 'IPCA' and baseCalculo eq 0 and Data ge '{desde}'",
+        f"Indicador eq 'IPCA' and Data ge '{desde}'",
+    ]
+    erro = None
+    for filtro in tentativas:
+        try:
+            js = _odata(filtro, campos, 100000)
+            break
+        except requests.HTTPError as e:
+            print(f"Focus: consulta recusada ({filtro}): {e}")
+            erro = e
+    else:
+        raise erro
     df = pd.DataFrame(js["value"])
+    if "baseCalculo" in df.columns:
+        df = df[pd.to_numeric(df["baseCalculo"], errors="coerce") == 0]
     df["data_pesquisa"] = pd.to_datetime(df["Data"])
     df["referencia"] = pd.to_datetime(df["DataReferencia"], format="%m/%Y")
     return (df.rename(columns={"Mediana": "mediana", "numeroRespondentes": "respondentes"})
