@@ -11,15 +11,15 @@
 
 ## Leitura
 
-*Leitura referente ao IPCA de agosto de 2026.*
+*Leitura referente ao IPCA de setembro de 2026.*
 
-A deflação de 0,32% em agosto veio de preços administrados e de alimentos, e não de uma desaceleração mais ampla. Habitação foi o principal vetor, com contribuição de −0,29 p.p.: a energia elétrica caiu 7,63% com o Bônus de Itaipu creditado nas faturas do mês. Transportes contribuiu com −0,17 p.p., com a queda das passagens aéreas e dos combustíveis, e Alimentação e bebidas com −0,07 p.p., com a queda dos alimentos in natura. No sentido contrário, Despesas pessoais somou +0,13 p.p., quase tudo pelo reajuste do cigarro.
+O IPCA subiu 0,82% em setembro, puxado por três grupos que somaram 0,71 p.p., quase 90% do índice. Habitação liderou, com 0,35 p.p.: a energia elétrica subiu 7,98% com o fim do Bônus de Itaipu e foi o maior impacto individual do mês. Alimentação e bebidas contribuiu com 0,18 p.p., com a alimentação no domicílio em alta de 0,96%, concentrada em tomate, batata, cebola e arroz, enquanto o frango caiu. Transportes somou outros 0,18 p.p., com passagens aéreas (9,66%) e combustíveis (1,41%, com etanol a 3,16% e gasolina a 1,21%).
 
-O resultado ficou abaixo da mediana do Focus coletada no meio do mês, e o acumulado em 12 meses recuou para 4,22%, consolidando o retorno ao intervalo de tolerância da meta depois de ter ficado acima do teto de 4,5% em junho. A melhora, porém, depende em boa parte de um fator que não se repete: o bônus é um crédito pontual, e a tarifa de energia volta ao nível anterior nas faturas seguintes.
+Fora desses três grupos, a alta foi moderada: os outros seis somaram 0,11 p.p., com Saúde e cuidados pessoais (0,08%) e Educação (0,04%) praticamente estáveis. O resultado do mês é, portanto, concentrado em preços administrados, alimentos in natura e itens voláteis, e não um avanço disseminado.
 
-Essa é a principal razão da distância entre as projeções para setembro: o SARIMA espera 0,09% e o Focus, 0,56%. O modelo é univariado e lê a deflação de agosto como informação sobre a tendência; o mercado incorpora a reversão do bônus. O caso ilustra o limite do modelo puramente estatístico em meses dominados por preços administrados e reforça o próximo passo do projeto: incluir variáveis de fora da série, como o IPCA-15 e o calendário de reajustes.
+Com o resultado, o acumulado em 12 meses foi a 4,58%, acima do teto de 4,5%, e o acumulado no ano a 3,95%. O índice superou em 0,32 p.p. a mediana do Focus coletada no meio do mês (0,50%). Para outubro, o Focus espera 0,32%, e o SARIMA, 0,64%: o modelo univariado tende a projetar a alta de setembro para frente, sem distinguir o choque de energia da tendência, o que reforça o próximo passo do projeto, incluir o IPCA-15 e o calendário de reajustes.
 
-*Fonte dos itens: IBGE, divulgação do IPCA de agosto de 2026.*
+*Fonte dos itens: IBGE, divulgação do IPCA de setembro de 2026.*
 
 ## Contribuições por grupo
 
