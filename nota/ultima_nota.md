@@ -1,13 +1,13 @@
-# Monitor de inflação: IPCA de ago/26
+# Monitor de inflação: IPCA de set/26
 
 *Atualizado automaticamente após a divulgação do IPCA pelo IBGE.*
 
 ## Destaques
 
-- **IPCA de ago/26: -0,32%.** A mediana do Focus coletada no meio do mês esperava -0,17%: surpresa de -0,15 p.p.
-- **Acumulado em 12 meses: 4,22%**, para uma meta de 3,0% e teto de 4,5%.
-- **Acumulado no ano: 3,11%.**
-- **Inflação projetada para os próximos 12 meses (SARIMA, até ago/27): 4,59%.**
+- **IPCA de set/26: 0,82%.** A mediana do Focus coletada no meio do mês esperava 0,50%: surpresa de 0,32 p.p.
+- **Acumulado em 12 meses: 4,58%**, para uma meta de 3,0% e teto de 4,5% (acima do teto).
+- **Acumulado no ano: 3,95%.**
+- **Inflação projetada para os próximos 12 meses (SARIMA, até set/27): 5,97%.**
 
 ## Leitura
 
@@ -23,13 +23,13 @@ Essa é a principal razão da distância entre as projeções para setembro: o S
 
 ## Contribuições por grupo
 
-| Grupo | ago/26 (p.p.) | Soma dos últimos 12 meses (p.p.) |
+| Grupo | set/26 (p.p.) | Soma dos últimos 12 meses (p.p.) |
 |---|---:|---:|
-| Alimentação e bebidas | -0,07 | 0,74 |
-| Habitação | -0,29 | 0,74 |
-| Transportes | -0,17 | 0,62 |
-| Saúde e cuidados pessoais | 0,03 | 0,78 |
-| Demais grupos | 0,19 | 1,26 |
+| Alimentação e bebidas | 0,18 | 0,98 |
+| Habitação | 0,35 | 0,64 |
+| Transportes | 0,18 | 0,79 |
+| Saúde e cuidados pessoais | 0,01 | 0,76 |
+| Demais grupos | 0,10 | 1,30 |
 
 ![Contribuições](../output/figuras/contribuicoes.png)
 
@@ -37,12 +37,12 @@ Essa é a principal razão da distância entre as projeções para setembro: o S
 
 | Mês | SARIMA (%) | Intervalo de 80% | Focus, mediana (%) | Acumulado em 12 meses, SARIMA (%) |
 |---|---:|---:|---:|---:|
-| set/26 | 0,09 | -0,25 a 0,43 | 0,60 | 3,82 |
-| out/26 | 0,28 | -0,10 a 0,66 | 0,32 | 4,01 |
-| nov/26 | 0,32 | -0,07 a 0,72 | 0,35 | 4,16 |
-| dez/26 | 0,48 | 0,08 a 0,88 | 0,56 | 4,32 |
-| jan/27 | 0,41 | 0,00 a 0,81 | 0,45 | 4,39 |
-| fev/27 | 0,60 | 0,20 a 1,01 | 0,66 | 4,29 |
+| out/26 | 0,64 | 0,30 a 0,99 | 0,32 | 5,15 |
+| nov/26 | 0,55 | 0,17 a 0,93 | 0,35 | 5,54 |
+| dez/26 | 0,62 | 0,23 a 1,02 | 0,56 | 5,85 |
+| jan/27 | 0,49 | 0,09 a 0,89 | 0,45 | 6,02 |
+| fev/27 | 0,67 | 0,27 a 1,07 | 0,66 | 5,98 |
+| mar/27 | 0,58 | 0,18 a 0,99 | 0,41 | 5,67 |
 
 ![Projeção](../output/figuras/projecao.png)
 
@@ -52,8 +52,8 @@ Previsões um passo à frente nos últimos 36 meses, em pontos percentuais. A me
 
 | Modelo | RMSE | MAE | Viés |
 |---|---:|---:|---:|
-| Mediana do Focus | 0,147 | 0,112 | -0,009 |
-| Sazonal simples | 0,246 | 0,198 | 0,001 |
-| SARIMA | 0,279 | 0,205 | 0,045 |
+| Mediana do Focus | 0,155 | 0,117 | -0,021 |
+| Sazonal simples | 0,263 | 0,212 | -0,015 |
+| SARIMA | 0,304 | 0,223 | 0,022 |
 
 ![IPCA em 12 meses](../output/figuras/acumulado_12m.png)
