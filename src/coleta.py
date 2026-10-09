@@ -144,9 +144,28 @@ def focus_mensal(desde: str = "2019-01-01") -> pd.DataFrame:
 
 
 def coletar(pasta: str = "data") -> None:
-    ipca_mensal().to_csv(f"{pasta}/ipca_mensal.csv", index=False)
-    ipca_grupos().to_csv(f"{pasta}/ipca_grupos.csv", index=False)
-    focus_mensal().to_csv(f"{pasta}/focus_mensal.csv", index=False)
+    """Coleta cada fonte de forma independente.
+
+    Se uma fonte falhar (API fora do ar, tabela em atualização no dia da
+    divulgação), o erro vai para o log e o arquivo anterior é mantido, para que
+    as demais fontes ainda atualizem o monitor. O IPCA mensal é obrigatório.
+    """
+    import os
+    import traceback
+
+    fontes = [("ipca_mensal", ipca_mensal, True), ("ipca_grupos", ipca_grupos, False),
+              ("focus_mensal", focus_mensal, False)]
+    for nome, funcao, obrigatoria in fontes:
+        caminho = f"{pasta}/{nome}.csv"
+        try:
+            funcao().to_csv(caminho, index=False)
+            print(f"{nome}: atualizado")
+        except Exception:
+            print(f"{nome}: FALHOU")
+            traceback.print_exc()
+            if obrigatoria or not os.path.exists(caminho):
+                raise
+            print(f"{nome}: mantida a versão anterior de {caminho}")
 
 
 if __name__ == "__main__":
