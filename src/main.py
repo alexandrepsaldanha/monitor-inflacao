@@ -40,7 +40,7 @@ def focus_futuro(focus: pd.DataFrame, ultimo_mes) -> pd.DataFrame:
             .drop_duplicates("data", keep="last"))
 
 
-def nota(ipca, ac, contrib, proj, proj_ac, ff, prev_aval, metricas, focus_ref, prox12) -> str:
+def nota(ipca, ac, contrib, proj, proj_ac, ff, prev_aval, metricas, focus_ref, prox12, surp=None) -> str:
     ult = ipca.iloc[-1]
     mes = ult["data"]
     ac_ult = ac.iloc[-1]
@@ -107,7 +107,35 @@ Previsões um passo à frente nos últimos {n_aval} meses, em pontos percentuais
 |---|---:|---:|---:|
 {linhas_m}
 
+{secao_surpresa(surp, mes) if surp is not None else ""}
 ![IPCA em 12 meses](../output/figuras/acumulado_12m.png)
+"""
+
+
+def secao_surpresa(s: pd.DataFrame, mes) -> str:
+    u = s.iloc[-1]
+    if u["data"] != mes:
+        return ""
+    abs_ = s["surpresa"].abs()
+    maiores = int((abs_ > abs(u["surpresa"]) + 1e-9).sum())
+    posicao = "a maior" if maiores == 0 else f"a {maiores + 1}ª maior"
+    sinais = s["surpresa"].apply(lambda v: 1 if v > 0 else -1)
+    seq = 1
+    for v in sinais.iloc[-2::-1]:
+        if v != sinais.iloc[-1]:
+            break
+        seq += 1
+    lado = "subestimou" if u["surpresa"] > 0 else "superestimou"
+    return f"""## Precisão do Focus
+
+- **Surpresa de {mes_ano(mes)}: {br(u['surpresa'])} p.p.** em relação à última pesquisa disponível antes da divulgação ({br(u['focus_vespera'])}%), e {br(u['surpresa_meio_mes'])} p.p. em relação à do meio do mês.
+- Em módulo, é {posicao} surpresa dos últimos {len(s)} meses. O desvio-padrão das surpresas no período é de {br(s['surpresa'].std())} p.p., e o viés médio, de {br(s['surpresa'].mean())} p.p.
+- O mercado {lado} o IPCA {"pelo " + str(seq) + "º mês seguido" if seq > 1 else "neste mês, invertendo o sinal do erro anterior"}.
+
+![Trajetória das expectativas](../output/figuras/trajetoria_focus.png)
+
+![Surpresas em relação ao Focus](../output/figuras/surpresas_focus.png)
+
 """
 
 
@@ -138,9 +166,19 @@ def main(coletar: bool = True):
     graficos.contribuicoes(contrib, ipca, f"{FIG}/contribuicoes.png")
     graficos.projecao(ipca, proj.head(6), ff[ff["data"].isin(proj.head(6)["data"])], f"{FIG}/projecao.png")
 
+    surp = analise.surpresas(ipca, focus)
+    surp.to_csv(f"{TAB}/surpresas_focus.csv", index=False)
+    ult_mes = ipca["data"].max()
+    traj = analise.trajetoria(focus, ult_mes)
+    meio = focus_ref.loc[focus_ref["data"] == ult_mes, "focus"]
+    if len(traj):
+        graficos.trajetoria_focus(traj, ult_mes, ipca["ipca"].iloc[-1],
+                                  meio.iloc[0] if len(meio) else None, f"{FIG}/trajetoria_focus.png")
+    graficos.historico_surpresas(surp, f"{FIG}/surpresas_focus.png")
+
     with open("nota/ultima_nota.md", "w", encoding="utf-8") as fh:
         fh.write(nota(ipca, ac, contrib, proj.head(6), proj_ac.head(6), ff, prev_aval, metricas, focus_ref,
-                     proj_ac.iloc[-1]))
+                     proj_ac.iloc[-1], surp))
     print(f"Monitor atualizado: IPCA de {mes_ano(ipca['data'].max())}. "
           f"Maior diferença da decomposição: {conf['diferenca'].abs().max():.3f} p.p.")
 

@@ -121,3 +121,66 @@ def projecao(ipca: pd.DataFrame, proj: pd.DataFrame, focus_futuro: pd.DataFrame,
     fig.tight_layout(rect=(0, 0.03, 1, 1))
     fig.savefig(caminho, dpi=200)
     plt.close(fig)
+
+
+def _br(v: float, d: int = 2) -> str:
+    return f"{v:.{d}f}".replace(".", ",").replace("-", "−")
+
+
+def trajetoria_focus(traj: pd.DataFrame, mes, observado: float, meio_mes: float | None, caminho: str):
+    """Mediana do Focus para um mês, pesquisa a pesquisa, contra o IPCA divulgado."""
+    fig, ax = plt.subplots(figsize=(9, 4.6))
+    ax.plot(traj["data_pesquisa"], traj["mediana"], color=AZUL, linewidth=2, drawstyle="steps-post",
+            label="Mediana do Focus para o mês")
+    ult = traj.iloc[-1]
+    ax.plot([ult["data_pesquisa"]], [ult["mediana"]], "o", color=AZUL, markersize=6)
+    ax.annotate(f"Última pesquisa: {_br(ult['mediana'])}%", (ult["data_pesquisa"], ult["mediana"]),
+                xytext=(-8, 10), textcoords="offset points", ha="right", fontsize=9, color=AZUL)
+    if meio_mes is not None and pd.notna(meio_mes):
+        meio = traj[(traj["data_pesquisa"].dt.to_period("M") == pd.Timestamp(mes).to_period("M")) &
+                    (traj["data_pesquisa"].dt.day >= 15)].head(1)
+        if len(meio):
+            ax.plot(meio["data_pesquisa"], meio["mediana"], "o", color=TINTA2, markersize=6,
+                    markerfacecolor="white", markeredgewidth=1.5, label="Pesquisa do meio do mês")
+    ax.axhline(observado, color=LARANJA, linewidth=2, linestyle="--", label=f"IPCA divulgado: {_br(observado)}%")
+    ax.axvspan(pd.Timestamp(mes), pd.Timestamp(mes) + pd.offsets.MonthEnd(0), color="#f2f2f2", zorder=0)
+    ax.text(pd.Timestamp(mes) + pd.Timedelta(days=2), 0.97, "mês de referência", transform=ax.get_xaxis_transform(),
+            fontsize=8, color=TINTA2, va="top")
+    _estilo(ax, f"Quanto o mercado esperava para o IPCA de {mes_ano(pd.Timestamp(mes))}",
+            "% ao mês; mediana das expectativas do Focus em cada pesquisa até a divulgação")
+    ax.yaxis.set_major_formatter(lambda v, _: f"{v:.2f}".replace(".", ","))
+    ax.xaxis.set_major_locator(mdates.MonthLocator())
+    ax.xaxis.set_major_formatter(_fmt_mes)
+    ax.legend(frameon=False, fontsize=8.5, loc="upper left", bbox_to_anchor=(0, -0.08), ncol=3)
+    _rodape(fig)
+    fig.tight_layout(rect=(0, 0.03, 1, 1))
+    fig.savefig(caminho, dpi=200)
+    plt.close(fig)
+
+
+def historico_surpresas(s: pd.DataFrame, caminho: str):
+    """Erro do Focus em cada mês: IPCA divulgado menos a mediana da véspera."""
+    fig, ax = plt.subplots(figsize=(9, 4.4))
+    x = range(len(s))
+    cores = [LARANJA if v > 0 else AZUL for v in s["surpresa"]]
+    alfas = [1.0 if i == len(s) - 1 else 0.55 for i in x]
+    for xi, v, c, a in zip(x, s["surpresa"], cores, alfas):
+        ax.bar(xi, v, color=c, alpha=a, width=0.75, edgecolor=TINTA if a == 1.0 else "none", linewidth=1.2)
+    dp = s["surpresa"].std()
+    for y in (dp, -dp):
+        ax.axhline(y, color=CINZA, linestyle=":", linewidth=1)
+    ax.text(-0.5, dp, "±1 desvio-padrão", fontsize=8, color=TINTA2, va="bottom", ha="left")
+    ax.axhline(0, color=TINTA2, linewidth=0.8)
+    u = s.iloc[-1]
+    ax.annotate(f"{mes_ano(u['data'])}: {_br(u['surpresa'])} p.p.", (len(s) - 1, u["surpresa"]),
+                xytext=(0, 8 if u["surpresa"] > 0 else -14), textcoords="offset points", ha="center",
+                fontsize=9, fontweight="bold", color=TINTA)
+    pos = list(range(len(s) - 1, -1, -3))[::-1]
+    ax.set_xticks(pos, [mes_ano(s["data"].iloc[i]) for i in pos], fontsize=8.5)
+    ax.yaxis.set_major_formatter(lambda v, _: f"{v:.1f}".replace(".", ",").replace("-", "−"))
+    _estilo(ax, "Surpresas do IPCA em relação ao Focus",
+            "p.p.; IPCA divulgado menos a última mediana do Focus. Laranja: mercado subestimou; azul: superestimou")
+    _rodape(fig)
+    fig.tight_layout(rect=(0, 0.03, 1, 1))
+    fig.savefig(caminho, dpi=200)
+    plt.close(fig)

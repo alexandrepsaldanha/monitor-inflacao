@@ -56,4 +56,15 @@ Previsões um passo à frente nos últimos 36 meses, em pontos percentuais. A me
 | Sazonal simples | 0,263 | 0,212 | -0,015 |
 | SARIMA | 0,304 | 0,223 | 0,022 |
 
+## Precisão do Focus
+
+- **Surpresa de set/26: 0,22 p.p.** em relação à última pesquisa disponível antes da divulgação (0,60%), e 0,32 p.p. em relação à do meio do mês.
+- Em módulo, é a 2ª maior surpresa dos últimos 36 meses. O desvio-padrão das surpresas no período é de 0,09 p.p., e o viés médio, de 0,01 p.p.
+- O mercado subestimou o IPCA neste mês, invertendo o sinal do erro anterior.
+
+![Trajetória das expectativas](../output/figuras/trajetoria_focus.png)
+
+![Surpresas em relação ao Focus](../output/figuras/surpresas_focus.png)
+
+
 ![IPCA em 12 meses](../output/figuras/acumulado_12m.png)

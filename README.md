@@ -13,7 +13,8 @@ Acompanhamento mensal do IPCA com atualização automática: coleta os dados do 
 1. **Como veio o último IPCA em relação ao esperado?** A surpresa é medida contra a mediana do Focus coletada no meio do mês de referência.
 2. **O que puxou a inflação?** A contribuição de cada grupo (peso × variação) separa choques de alimentos, preços administrados, combustíveis e serviços.
 3. **Para onde vai a inflação em 12 meses, e onde fica em relação à meta?** Projeção mensal com intervalo de confiança, acumulada em 12 meses e comparada ao centro e ao teto da meta.
-4. **O modelo é útil?** As previsões são avaliadas fora da amostra contra o Focus, que é a referência que o mercado usa.
+4. **O mercado acertou?** A surpresa do mês é comparada com o histórico de erros do Focus e com a trajetória das expectativas até a divulgação.
+5. **O modelo é útil?** As previsões são avaliadas fora da amostra contra o Focus, que é a referência que o mercado usa.
 
 ## Método
 

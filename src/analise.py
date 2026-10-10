@@ -104,6 +104,38 @@ def focus_no_meio_do_mes(focus: pd.DataFrame) -> pd.DataFrame:
             .rename(columns={"referencia": "data", "mediana": "focus"})[["data", "focus"]])
 
 
+def focus_vespera(focus: pd.DataFrame) -> pd.DataFrame:
+    """Última mediana do Focus para cada mês antes da divulgação do IPCA.
+
+    A pesquisa segue coletando expectativas para um mês até a véspera da
+    divulgação do índice; a última coleta é o consenso final do mercado.
+    """
+    f = focus.sort_values("data_pesquisa").groupby("referencia", as_index=False).last()
+    return f.rename(columns={"referencia": "data", "mediana": "focus_vespera",
+                             "data_pesquisa": "pesquisa_vespera"})[["data", "focus_vespera", "pesquisa_vespera"]]
+
+
+def surpresas(ipca: pd.DataFrame, focus: pd.DataFrame, meses: int = 36) -> pd.DataFrame:
+    """Erro do Focus (IPCA observado menos mediana) nos últimos meses.
+
+    Duas referências: a mediana da véspera da divulgação (o consenso final do
+    mercado) e a do meio do mês (mesmo conjunto de informação dos modelos).
+    """
+    s = (ipca.merge(focus_vespera(focus), on="data")
+         .merge(focus_no_meio_do_mes(focus), on="data", how="left"))
+    s["surpresa"] = s["ipca"] - s["focus_vespera"]
+    s["surpresa_meio_mes"] = s["ipca"] - s["focus"]
+    return s.sort_values("data").tail(meses).reset_index(drop=True)
+
+
+def trajetoria(focus: pd.DataFrame, mes, meses_antes: int = 4) -> pd.DataFrame:
+    """Evolução da mediana do Focus para um mês, nas pesquisas anteriores à divulgação."""
+    mes = pd.Timestamp(mes)
+    f = focus[(focus["referencia"] == mes) &
+              (focus["data_pesquisa"] >= mes - pd.DateOffset(months=meses_antes))]
+    return f.sort_values("data_pesquisa")[["data_pesquisa", "mediana"]].reset_index(drop=True)
+
+
 def avaliar_fora_da_amostra(ipca: pd.DataFrame, focus: pd.DataFrame, meses: int = 36,
                             inicio: str = "2004-01-01") -> tuple[pd.DataFrame, pd.DataFrame]:
     """Previsões um passo à frente em janela crescente, comparadas ao Focus."""
