@@ -38,10 +38,10 @@ Com o resultado, o acumulado em 12 meses foi a 4,63%, acima do teto de 4,5%, e o
 | Mês | SARIMA (%) | Intervalo de 80% | Focus, mediana (%) | Acumulado em 12 meses, SARIMA (%) |
 |---|---:|---:|---:|---:|
 | nov/26 | 0,30 | -0,04 a 0,65 | 0,35 | 4,76 |
-| dez/26 | 0,46 | 0,07 a 0,84 | 0,60 | 4,89 |
-| jan/27 | 0,39 | -0,01 a 0,78 | 0,57 | 4,95 |
-| fev/27 | 0,60 | 0,20 a 1,00 | 0,75 | 4,84 |
-| mar/27 | 0,54 | 0,14 a 0,94 | 0,49 | 4,49 |
+| dez/26 | 0,46 | 0,07 a 0,84 | 0,61 | 4,89 |
+| jan/27 | 0,39 | -0,01 a 0,78 | 0,60 | 4,95 |
+| fev/27 | 0,60 | 0,20 a 1,00 | 0,76 | 4,84 |
+| mar/27 | 0,54 | 0,14 a 0,94 | 0,50 | 4,49 |
 | abr/27 | 0,46 | 0,06 a 0,87 | 0,48 | 4,28 |
 
 ![Projeção](../output/figuras/projecao.png)
@@ -58,7 +58,7 @@ Previsões um passo à frente nos últimos 36 meses, em pontos percentuais. A me
 
 ## Precisão do Focus
 
-- **Surpresa de out/26: -0,13 p.p.** em relação à última pesquisa disponível antes da divulgação (0,27%), e -0,18 p.p. em relação à do meio do mês.
+- **Surpresa de out/26: -0,12 p.p.** em relação à última pesquisa disponível antes da divulgação (0,26%), e -0,18 p.p. em relação à do meio do mês.
 - Em módulo, é a 6ª maior surpresa dos últimos 36 meses. O desvio-padrão das surpresas no período é de 0,09 p.p., e o viés médio, de 0,01 p.p.
 - O mercado superestimou o IPCA neste mês, invertendo o sinal do erro anterior.
 
